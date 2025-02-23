@@ -1,12 +1,18 @@
 const express = require('express');
 const { exec } = require('child_process');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Renderでは環境変数PORTを使う
 const cors = require('cors');
+
 app.use(cors());
 
 // 環境変数からDropboxのパスを取得
 const kintoneBasePath = process.env.KINTONE_LINK_FILEPATH;
+
+// ✅ `/` にアクセスしたときにエラーメッセージが出ないようにする
+app.get('/', (req, res) => {
+    res.send("Hello, Render! 🚀 Your app is running!");
+});
 
 app.get('/open', (req, res) => {
     let relativePath;
@@ -34,6 +40,7 @@ app.get('/open', (req, res) => {
     });
 });
 
+// ✅ Renderでは `process.env.PORT` を使う必要がある！
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
